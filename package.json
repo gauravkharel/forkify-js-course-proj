@@ -1,0 +1,24 @@
+{
+  "name": "forkify-js-course-proj",
+  "version": "1.0.0",
+  "description": "Project to practice JS",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gauravkharel/forkify-js-course-proj.git"
+  },
+  "author": "Gaurav Kharel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gauravkharel/forkify-js-course-proj/issues"
+  },
+  "homepage": "https://github.com/gauravkharel/forkify-js-course-proj#readme",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.0.0-beta.3.1",
+    "parcel": "^2.0.0-beta.3.1"
+  }
+}
