@@ -402,10 +402,14 @@ const renderSpinner = function(parentEl) {
     parentEl.insertAdjacentHTML('afterbegin', markup);
 };
 const showRecipe = async function() {
-    // 1. Loading the recipe
-    renderSpinner(recipeContainer);
+    // Listening the loads and hashchange events
     try {
-        const res = await fetch('https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886');
+        const id = window.location.hash.slice(1);
+        console.log(id);
+        if (!id) return;
+        // 1. Loading the recipe
+        renderSpinner(recipeContainer);
+        const res = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
         const data = await res.json();
         if (!res.ok) throw new Error('${data.message} (${res.status})');
         let { recipe  } = data.data;
@@ -430,7 +434,17 @@ const showRecipe = async function() {
         alert(err);
     }
 };
-showRecipe();
+// First output
+//showRecipe();
+//second output
+// window.addEventListener('hashchange', showRecipe);
+// window.addEventListener('load', showRecipe);
+//for second output in more concise way
+[
+    'hashchange',
+    'load'
+].forEach((ev)=>window.addEventListener(ev, showRecipe)
+);
 
 },{"url:../img/icons.svg":"3t5dV","core-js/stable":"1PFvP","regenerator-runtime/runtime":"62Qib","@parcel/transformer-js/src/esmodule-helpers.js":"367CR"}],"3t5dV":[function(require,module,exports) {
 module.exports = require('./bundle-url').getBundleURL() + "icons.d4a14980.svg";
