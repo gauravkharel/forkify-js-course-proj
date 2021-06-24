@@ -22,6 +22,7 @@
     "parcel": "^2.0.0-beta.3.1"
   },
   "dependencies": {
+    "fractional": "^1.0.0",
     "regenerator-runtime": "^0.13.7"
   }
 }
