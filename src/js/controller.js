@@ -36,7 +36,7 @@ const controlRecipes = async function(){
     //2. Rendering the recipe 
     recipeView.render(model.state.recipe);
     }catch(err){
-    alert(err);
+    console.log(err);
   }
 };
 
@@ -46,9 +46,11 @@ const controlRecipes = async function(){
 //second output
 // window.addEventListener('hashchange', controlRecipes);
 // window.addEventListener('load', controlRecipes);
-//for second output in more concise way
 
-['hashchange', 'load'].forEach(ev => window.addEventListener(ev, controlRecipes));
-
+//Publisher_Subscriber Design Patter with addHandlerRender in controller.js
+const init = function() {
+  recipeView.addHandlerRender(controlRecipes);
+}
+init();
 
 
