@@ -410,7 +410,7 @@ const controlRecipes = async function() {
         //2. Rendering the recipe 
         _recipeViewJsDefault.default.render(_modelJs.state.recipe);
     } catch (err) {
-        console.log(err);
+        _recipeViewJsDefault.default.renderError();
     }
 };
 // First output
@@ -454,7 +454,8 @@ const loadRecipe = async function(id) {
         };
         console.log(state.recipe);
     } catch (err) {
-        alert(err);
+        console.log(`${err}  👣  👣  👣 `);
+        throw err;
     }
 };
 
@@ -12310,6 +12311,7 @@ console.log(_fractional.Fraction);
 class RecipeView {
     #parentElement = document.querySelector('.recipe');
     #data;
+    #errorMessage = 'This input is incorrect. Please try with another one.';
     render(data) {
         this.#data = data;
         const markup = this.#generateMarkup();
@@ -12321,9 +12323,15 @@ class RecipeView {
     }
     renderSpinner = function() {
         const markup = `\n          <div class="spinner">\n          <svg>\n            <use href="${_iconsSvgDefault.default}#icon-loader"></use>\n          </svg>\n          </div>\n        `;
-        this.#parentElement.innerHTML = '';
+        this.#clear();
         this.#parentElement.insertAdjacentHTML('afterbegin', markup);
     };
+    // Implementing Error Message
+    renderError(message = this.#errorMessage) {
+        const markup = `\n            <div class="error">\n                <div>\n                <svg>\n                    <use href="${_iconsSvgDefault.default}#icon-alert-triangle"></use>\n                </svg>\n                </div>\n                <p>${message}</p>\n            </div>\n        `;
+        this.#clear();
+        this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
     //Implemented Publisher-Subscriber Design Pattern for Event Hanling 
     addHandlerRender(handler) {
         [

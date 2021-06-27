@@ -6,6 +6,7 @@ console.log(Fraction);
 class RecipeView{
     #parentElement = document.querySelector('.recipe');
     #data;
+    #errorMessage = 'This input is incorrect. Please try with another one.';
 
     render (data){
         this.#data = data;
@@ -26,9 +27,25 @@ class RecipeView{
           </svg>
           </div>
         `;
-       this.#parentElement.innerHTML = '';
+       this.#clear();
        this.#parentElement.insertAdjacentHTML('afterbegin', markup);
       };
+
+    // Implementing Error Message
+    renderError(message = this.#errorMessage){
+        const markup = `
+            <div class="error">
+                <div>
+                <svg>
+                    <use href="${icons}#icon-alert-triangle"></use>
+                </svg>
+                </div>
+                <p>${message}</p>
+            </div>
+        `;
+        this.#clear();
+       this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+     }
 
     //Implemented Publisher-Subscriber Design Pattern for Event Hanling 
     addHandlerRender(handler){
