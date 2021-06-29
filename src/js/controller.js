@@ -1,5 +1,6 @@
 import * as model from './model.js';
-import recipeView from './views/recipeView.js'
+import recipeView from './views/recipeView.js';
+import searchView from './views/searchView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -40,16 +41,27 @@ const controlRecipes = async function(){
     }
 };
 
-// First output
-//controlRecipes();
+const controlSearchResults = async function(){
+  try {
+    // 1) Get Search Query
+    const query = searchView.getQuery();
+    if (!query) return;
 
-//second output
-// window.addEventListener('hashchange', controlRecipes);
-// window.addEventListener('load', controlRecipes);
+    //2) Load Search  Results
+    await model.loadSearchResults(query);
+
+    //3) Render Results
+    console.log(model.state.search.results);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 
 //Publisher_Subscriber Design Patter with addHandlerRender in controller.js
 const init = function() {
   recipeView.addHandlerRender(controlRecipes);
+  searchView.addHandlerRender(controlSearchResults);
 }
 init();
 
