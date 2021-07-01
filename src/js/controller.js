@@ -1,32 +1,42 @@
 import * as model from './model.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
+import resultsView from './views/resultsView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import { async } from 'regenerator-runtime';
 
-const recipeContainer = document.querySelector('.recipe');
+// const recipeContainer = document.querySelector('.recipe');
 
-const timeout = function (s) {
-  return new Promise(function (_, reject) {
-    setTimeout(function () {
-      reject(new Error(`Request took too long! Timeout after ${s} second`));
-    }, s * 1000);
-  });
-};
+// const timeout = function (s) {
+//   return new Promise(function (_, reject) {
+//     setTimeout(function () {
+//       reject(new Error(`Request took too long! Timeout after ${s} second`));
+//     }, s * 1000);
+//   });
+// };
 
 // https://forkify-api.herokuapp.com/v2
 
-///////////////////////////////////////
+////////////////////////////////////////
+
+//module.hot is a parcel usecase, not js 
+if (module.hot){
+
+
+  module.hot.accept();
+}
+
 
 const controlRecipes = async function(){
   
   // Listening the loads and hashchange events
   try{
     const id = window.location.hash.slice(1);
-    console.log(id);
+
+    
     if(!id) return;
-  
     recipeView.renderSpinner();
 
    // 1. Loading the recipe
@@ -43,6 +53,8 @@ const controlRecipes = async function(){
 
 const controlSearchResults = async function(){
   try {
+    resultsView.renderSpinner();
+
     // 1) Get Search Query
     const query = searchView.getQuery();
     if (!query) return;
@@ -51,7 +63,7 @@ const controlSearchResults = async function(){
     await model.loadSearchResults(query);
 
     //3) Render Results
-    console.log(model.state.search.results);
+    resultsView.render(model.state.search.results);
   } catch (err) {
     console.log(err);
   }
@@ -62,7 +74,7 @@ const controlSearchResults = async function(){
 const init = function() {
   recipeView.addHandlerRender(controlRecipes);
   searchView.addHandlerRender(controlSearchResults);
-}
+}; 
 init();
 
 
