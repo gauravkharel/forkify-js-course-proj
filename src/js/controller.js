@@ -22,11 +22,11 @@ import { async } from 'regenerator-runtime';
 ////////////////////////////////////////
 
 //module.hot is a parcel usecase, not js 
-if (module.hot){
+// if (module.hot){
 
 
-  module.hot.accept();
-}
+//   module.hot.accept();
+// }
 
 
 const controlRecipes = async function(){
@@ -42,7 +42,7 @@ const controlRecipes = async function(){
    // 1. Loading the recipe
 
     await model.loadRecipe(id);
-    const { recipe } = model.state;     
+    // const { recipe } = model.state;    
 
     //2. Rendering the recipe 
     recipeView.render(model.state.recipe);
@@ -63,7 +63,8 @@ const controlSearchResults = async function(){
     await model.loadSearchResults(query);
 
     //3) Render Results
-    resultsView.render(model.state.search.results);
+    console.log(model.getSearchResultPage());
+    resultsView.render(model.getSearchResultPage());
   } catch (err) {
     console.log(err);
   }
@@ -73,7 +74,7 @@ const controlSearchResults = async function(){
 //Publisher_Subscriber Design Patter with addHandlerRender in controller.js
 const init = function() {
   recipeView.addHandlerRender(controlRecipes);
-  searchView.addHandlerRender(controlSearchResults);
+  searchView.addHandlerSearch(controlSearchResults);
 }; 
 init();
 

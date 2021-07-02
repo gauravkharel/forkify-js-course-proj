@@ -403,7 +403,9 @@ var _regeneratorRuntime = require("regenerator-runtime");
 // https://forkify-api.herokuapp.com/v2
 ////////////////////////////////////////
 //module.hot is a parcel usecase, not js 
-if (module.hot) module.hot.accept();
+// if (module.hot){
+//   module.hot.accept();
+// }
 const controlRecipes = async function() {
     // Listening the loads and hashchange events
     try {
@@ -412,7 +414,7 @@ const controlRecipes = async function() {
         _recipeViewJsDefault.default.renderSpinner();
         // 1. Loading the recipe
         await _modelJs.loadRecipe(id);
-        const { recipe  } = _modelJs.state;
+        // const { recipe } = model.state;    
         //2. Rendering the recipe 
         _recipeViewJsDefault.default.render(_modelJs.state.recipe);
     } catch (err) {
@@ -428,7 +430,8 @@ const controlSearchResults = async function() {
         //2) Load Search  Results
         await _modelJs.loadSearchResults(query);
         //3) Render Results
-        _resultsViewJsDefault.default.render(_modelJs.state.search.results);
+        console.log(_modelJs.getSearchResultPage());
+        _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage());
     } catch (err) {
         console.log(err);
     }
@@ -436,7 +439,7 @@ const controlSearchResults = async function() {
 //Publisher_Subscriber Design Patter with addHandlerRender in controller.js
 const init = function() {
     _recipeViewJsDefault.default.addHandlerRender(controlRecipes);
-    _searchViewJsDefault.default.addHandlerRender(controlSearchResults);
+    _searchViewJsDefault.default.addHandlerSearch(controlSearchResults);
 };
 init();
 
@@ -449,6 +452,8 @@ parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe
 );
 parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults
 );
+parcelHelpers.export(exports, "getSearchResultPage", ()=>getSearchResultPage
+);
 var _regeneratorRuntime = require("regenerator-runtime");
 var _config = require("./config");
 var _helperJs = require("./helper.js");
@@ -457,7 +462,9 @@ const state = {
     },
     search: {
         query: '',
-        results: []
+        results: [],
+        page: 1,
+        resultsPerPage: _config.RES_PER_PAGE
     }
 };
 const loadRecipe = async function(id) {
@@ -476,6 +483,7 @@ const loadRecipe = async function(id) {
         };
         console.log(state.recipe);
     } catch (err) {
+        //Temp Error Handling
         console.log(`${err}  👣  👣  👣 `);
         throw err;
     }
@@ -499,7 +507,12 @@ const loadSearchResults = async function(query) {
         throw err;
     }
 };
-loadSearchResults('pizza');
+const getSearchResultPage = function(page = state.search.page) {
+    state.search.page = page;
+    const start = (page - 1) * state.search.resultsPerPage;
+    const end = page * state.search.resultsPerPage;
+    return state.search.results.slice(start, end);
+};
 
 },{"regenerator-runtime":"62Qib","@parcel/transformer-js/src/esmodule-helpers.js":"367CR","./config":"6pr2F","./helper.js":"dSCNX"}],"62Qib":[function(require,module,exports) {
 /**
@@ -1116,8 +1129,11 @@ parcelHelpers.export(exports, "API_URL", ()=>API_URL
 );
 parcelHelpers.export(exports, "TIMEOUT_SEC", ()=>TIMEOUT_SEC
 );
+parcelHelpers.export(exports, "RES_PER_PAGE", ()=>RES_PER_PAGE
+);
 const API_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes/';
 const TIMEOUT_SEC = 10;
+const RES_PER_PAGE = 10;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"367CR"}],"dSCNX":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -12634,6 +12650,7 @@ class View {
         if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
         this._data = data;
         const markup = this._generateMarkup();
+        if (!render) return markup;
         this._clear();
         this._parentElement.insertAdjacentHTML('afterbegin', markup);
     }
@@ -12648,6 +12665,11 @@ class View {
     // Implementing Error Message
     renderError(message = this._errorMessage) {
         const markup = `\n            <div class="error">\n                <div>\n                <svg>\n                    <use href="${_iconsSvgDefault.default}#icon-alert-triangle"></use>\n                </svg>\n                </div>\n                <p>${message}</p>\n            </div>\n        `;
+        this._clear();
+        this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
+    renderMessage(message = this._message) {
+        const markup = `\n          <div class="message">\n            <div>\n              <svg>\n                <use href="${_iconsSvgDefault.default}#icon-smile"></use>\n              </svg>\n            </div>\n            <p>${message}</p>\n          </div>\n        `;
         this._clear();
         this._parentElement.insertAdjacentHTML('afterbegin', markup);
     }
@@ -12712,21 +12734,22 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
+var _iconsSvg = require("url:../../img/icons.svg"); // Parcel 2
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 class ResultsView extends _viewDefault.default {
-    _parentElement = document.querySelector('results');
+    _parentElement = document.querySelector('.results');
     _errorMessage = 'No recipies found. Please try again later. ';
     _message = '';
     _generateMarkup() {
-        console.log(this._data);
         // this loop the preview of search result using map and join properties
         return this._data.map(this._generateMarkup).join('');
     }
     _generateMarkupPreview(result) {
-        return `\n            <li class="preview">\n                <a class="preview__link preview__link--active" href="${result.id}">\n                <figure class="preview__fig">\n                    <img src="${result.image}" alt="Test" />\n                </figure>\n                <div class="preview__data">\n                    <h4 class="preview__title">${result.title}</h4>\n                    <p class="preview__publisher">${result.publisher}</p>\n                    <div class="preview__user-generated">\n                    <svg>\n                        <use href="${icons}#icon-user"></use>\n                    </svg>\n                    </div>\n                </div>\n                </a>\n            </li>\n        `;
+        return `\n            <li class="preview">\n                <a class="preview__link preview__link--active" href="${result.id}">\n                <figure class="preview__fig">\n                    <img src="${result.image}" alt="Test" />\n                </figure>\n                <div class="preview__data">\n                    <h4 class="preview__title">${result.title}</h4>\n                    <p class="preview__publisher">${result.publisher}</p>\n                    <div class="preview__user-generated">\n                    <svg>\n                        <use href="${_iconsSvgDefault.default}#icon-user"></use>\n                    </svg>\n                    </div>\n                </div>\n                </a>\n            </li>\n        `;
     }
 }
 exports.default = new ResultsView();
 
-},{"./View":"48jhP","@parcel/transformer-js/src/esmodule-helpers.js":"367CR"}]},["1WnDs","3miIZ"], "3miIZ", "parcelRequire628f")
+},{"./View":"48jhP","@parcel/transformer-js/src/esmodule-helpers.js":"367CR","url:../../img/icons.svg":"3t5dV"}]},["1WnDs","3miIZ"], "3miIZ", "parcelRequire628f")
 
 //# sourceMappingURL=index.250b04c7.js.map
