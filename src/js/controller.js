@@ -2,6 +2,7 @@ import * as model from './model.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
+import paginationView from './views/paginationView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -62,19 +63,34 @@ const controlSearchResults = async function(){
     //2) Load Search  Results
     await model.loadSearchResults(query);
 
-    //3) Render Results
-    console.log(model.getSearchResultPage());
-    resultsView.render(model.getSearchResultPage());
+    //3) Render Results 
+    resultsView.render(model.getSearchResultPage(1));
+
+    //4) Render intial pagination button
+    paginationView.render(model.state.search);
+    
   } catch (err) {
     console.log(err);
   }
 };
 
+const controlPagination = function(goTopage) {
+  
+  //1) Render new Results 
+
+  //render override new page using the clear method
+  resultsView.render(model.getSearchResultPage(goTopage));
+
+  //2) Render new pagination button 
+  paginationView.render(model.state.search);
+  
+};
 
 //Publisher_Subscriber Design Patter with addHandlerRender in controller.js
 const init = function() {
   recipeView.addHandlerRender(controlRecipes);
   searchView.addHandlerSearch(controlSearchResults);
+  paginationView.addHandlerClick(controlPagination);
 }; 
 init();
 

@@ -1,12 +1,13 @@
 import View from './View';
 
+import icons from 'url:../../img/icons.svg'; 
 import { Fraction } from 'fractional';
  
 
 class RecipeView extends View{
     _parentElement = document.querySelector('.recipe');
     _errorMessage = 'This input is incorrect. Please try with another one.';
-    _message=''; 
+    _message = ''; 
     
     //Implemented Publisher-Subscriber Design Pattern for Event Hanling 
     addHandlerRender(handler){

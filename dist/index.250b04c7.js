@@ -389,6 +389,8 @@ var _searchViewJs = require("./views/searchView.js");
 var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
 var _resultsViewJs = require("./views/resultsView.js");
 var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
+var _paginationViewJs = require("./views/paginationView.js");
+var _paginationViewJsDefault = parcelHelpers.interopDefault(_paginationViewJs);
 var _stable = require("core-js/stable");
 var _runtime = require("regenerator-runtime/runtime");
 var _regeneratorRuntime = require("regenerator-runtime");
@@ -429,21 +431,30 @@ const controlSearchResults = async function() {
         if (!query) return;
         //2) Load Search  Results
         await _modelJs.loadSearchResults(query);
-        //3) Render Results
-        console.log(_modelJs.getSearchResultPage());
-        _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage());
+        //3) Render Results 
+        _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage(1));
+        //4) Render intial pagination button
+        _paginationViewJsDefault.default.render(_modelJs.state.search);
     } catch (err) {
         console.log(err);
     }
+};
+const controlPagination = function(goTopage) {
+    //1) Render new Results 
+    //render override new page using the clear method
+    _resultsViewJsDefault.default.render(_modelJs.getSearchResultPage(goTopage));
+    //2) Render new pagination button 
+    _paginationViewJsDefault.default.render(_modelJs.state.search);
 };
 //Publisher_Subscriber Design Patter with addHandlerRender in controller.js
 const init = function() {
     _recipeViewJsDefault.default.addHandlerRender(controlRecipes);
     _searchViewJsDefault.default.addHandlerSearch(controlSearchResults);
+    _paginationViewJsDefault.default.addHandlerClick(controlPagination);
 };
 init();
 
-},{"./model.js":"1hp6y","core-js/stable":"1PFvP","regenerator-runtime/runtime":"62Qib","@parcel/transformer-js/src/esmodule-helpers.js":"367CR","./views/recipeView.js":"9e6b9","./views/searchView.js":"3rYQ6","./views/resultsView.js":"17PYN","regenerator-runtime":"62Qib"}],"1hp6y":[function(require,module,exports) {
+},{"./model.js":"1hp6y","core-js/stable":"1PFvP","regenerator-runtime/runtime":"62Qib","@parcel/transformer-js/src/esmodule-helpers.js":"367CR","./views/recipeView.js":"9e6b9","./views/searchView.js":"3rYQ6","./views/resultsView.js":"17PYN","regenerator-runtime":"62Qib","./views/paginationView.js":"5u5Fw"}],"1hp6y":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state
@@ -12364,6 +12375,8 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 var _fractional = require("fractional");
 class RecipeView extends _viewDefault.default {
     _parentElement = document.querySelector('.recipe');
@@ -12378,15 +12391,15 @@ class RecipeView extends _viewDefault.default {
         );
     }
     _generateMarkup() {
-        return `<figure class="recipe__fig">\n                <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />\n                <h1 class="recipe__title">\n                <span>${this._data.title}</span>\n                </h1>\n            </figure>\n\n            <div class="recipe__details">\n                <div class="recipe__info">\n                <svg class="recipe__info-icon">\n                    <use href="${icons}#icon-clock"></use>\n                </svg>\n                <span class="recipe__info-data recipe__info-data--minutes">${this._data.cookingTime}</span>\n                <span class="recipe__info-text">minutes</span>\n                </div>\n                <div class="recipe__info">\n                <svg class="recipe__info-icon">\n                    <use href="${icons}#icon-users"></use>\n                </svg>\n                <span class="recipe__info-data recipe__info-data--people">${this._data.servings}</span>\n                <span class="recipe__info-text">servings</span>\n\n                <div class="recipe__info-buttons">\n                    <button class="btn--tiny btn--increase-servings">\n                    <svg>\n                        <use href="${icons}#icon-minus-circle"></use>\n                    </svg>\n                    </button>\n                    <button class="btn--tiny btn--increase-servings">\n                    <svg>\n                        <use href="${icons}#icon-plus-circle"></use>\n                    </svg>\n                    </button>\n                </div>\n                </div>\n\n                <div class="recipe__user-generated">\n                <svg>\n                    <use href="${icons}#icon-user"></use>\n                </svg>\n                </div>\n                <button class="btn--round">\n                <svg class="">\n                    <use href="${icons}#icon-bookmark-fill"></use>\n                </svg>\n                </button>\n            </div>\n\n            <div class="recipe__ingredients">\n                <h2 class="heading--2">Recipe ingredients</h2>\n                <ul class="recipe__ingredient-list">\n                ${this._data.ingredients.map(this._generateMarkupIngredient).join('')}  \n\n            <div class="recipe__directions">\n                <h2 class="heading--2">How to cook it</h2>\n                <p class="recipe__directions-text">\n                This recipe was carefully designed and tested by\n                <span class="recipe__publisher">${this._data.publisher}</span>. Please check out\n                directions at their website.\n                </p>\n                <a\n                class="btn--small recipe__btn"\n                href="${this._data.sourceUrl}"\n                target="_blank"\n                >\n                <span>Directions</span>\n                <svg class="search__icon">\n                    <use href="${icons}#icon-arrow-right"></use>\n                </svg>\n                </a>\n            </div> `;
+        return `<figure class="recipe__fig">\n                <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />\n                <h1 class="recipe__title">\n                <span>${this._data.title}</span>\n                </h1>\n            </figure>\n\n            <div class="recipe__details">\n                <div class="recipe__info">\n                <svg class="recipe__info-icon">\n                    <use href="${_iconsSvgDefault.default}#icon-clock"></use>\n                </svg>\n                <span class="recipe__info-data recipe__info-data--minutes">${this._data.cookingTime}</span>\n                <span class="recipe__info-text">minutes</span>\n                </div>\n                <div class="recipe__info">\n                <svg class="recipe__info-icon">\n                    <use href="${_iconsSvgDefault.default}#icon-users"></use>\n                </svg>\n                <span class="recipe__info-data recipe__info-data--people">${this._data.servings}</span>\n                <span class="recipe__info-text">servings</span>\n\n                <div class="recipe__info-buttons">\n                    <button class="btn--tiny btn--increase-servings">\n                    <svg>\n                        <use href="${_iconsSvgDefault.default}#icon-minus-circle"></use>\n                    </svg>\n                    </button>\n                    <button class="btn--tiny btn--increase-servings">\n                    <svg>\n                        <use href="${_iconsSvgDefault.default}#icon-plus-circle"></use>\n                    </svg>\n                    </button>\n                </div>\n                </div>\n\n                <div class="recipe__user-generated">\n                <svg>\n                    <use href="${_iconsSvgDefault.default}#icon-user"></use>\n                </svg>\n                </div>\n                <button class="btn--round">\n                <svg class="">\n                    <use href="${_iconsSvgDefault.default}#icon-bookmark-fill"></use>\n                </svg>\n                </button>\n            </div>\n\n            <div class="recipe__ingredients">\n                <h2 class="heading--2">Recipe ingredients</h2>\n                <ul class="recipe__ingredient-list">\n                ${this._data.ingredients.map(this._generateMarkupIngredient).join('')}  \n\n            <div class="recipe__directions">\n                <h2 class="heading--2">How to cook it</h2>\n                <p class="recipe__directions-text">\n                This recipe was carefully designed and tested by\n                <span class="recipe__publisher">${this._data.publisher}</span>. Please check out\n                directions at their website.\n                </p>\n                <a\n                class="btn--small recipe__btn"\n                href="${this._data.sourceUrl}"\n                target="_blank"\n                >\n                <span>Directions</span>\n                <svg class="search__icon">\n                    <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>\n                </svg>\n                </a>\n            </div> `;
     }
     _generateMarkupIngredient(ing) {
-        return `<li class="recipe__ingredient">\n            <svg class="recipe__icon">\n            <use href="${icons}#icon-check"></use>\n            </svg>\n            <div class="recipe__quantity">${ing.quantity ? new _fractional.Fraction(ing.quantity).toString() : ''}</div>\n            <div class="recipe__description">\n            <span class="recipe__unit">${ing.unit}</span>\n            ${ing.description}\n            </div>\n            </li>\n            `;
+        return `<li class="recipe__ingredient">\n            <svg class="recipe__icon">\n            <use href="${_iconsSvgDefault.default}#icon-check"></use>\n            </svg>\n            <div class="recipe__quantity">${ing.quantity ? new _fractional.Fraction(ing.quantity).toString() : ''}</div>\n            <div class="recipe__description">\n            <span class="recipe__unit">${ing.unit}</span>\n            ${ing.description}\n            </div>\n            </li>\n            `;
     }
 }
 exports.default = new RecipeView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"367CR","fractional":"5jzJt","./View":"48jhP"}],"5jzJt":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"367CR","fractional":"5jzJt","./View":"48jhP","url:../../img/icons.svg":"3t5dV"}],"5jzJt":[function(require,module,exports) {
 /*
 fraction.js
 A Javascript fraction library.
@@ -12650,7 +12663,7 @@ class View {
         if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
         this._data = data;
         const markup = this._generateMarkup();
-        if (!render) return markup;
+        // if (!render) return markup;
         this._clear();
         this._parentElement.insertAdjacentHTML('afterbegin', markup);
     }
@@ -12742,7 +12755,7 @@ class ResultsView extends _viewDefault.default {
     _message = '';
     _generateMarkup() {
         // this loop the preview of search result using map and join properties
-        return this._data.map(this._generateMarkup).join('');
+        return this._data.map(this._generateMarkupPreview).join('');
     }
     _generateMarkupPreview(result) {
         return `\n            <li class="preview">\n                <a class="preview__link preview__link--active" href="${result.id}">\n                <figure class="preview__fig">\n                    <img src="${result.image}" alt="Test" />\n                </figure>\n                <div class="preview__data">\n                    <h4 class="preview__title">${result.title}</h4>\n                    <p class="preview__publisher">${result.publisher}</p>\n                    <div class="preview__user-generated">\n                    <svg>\n                        <use href="${_iconsSvgDefault.default}#icon-user"></use>\n                    </svg>\n                    </div>\n                </div>\n                </a>\n            </li>\n        `;
@@ -12750,6 +12763,38 @@ class ResultsView extends _viewDefault.default {
 }
 exports.default = new ResultsView();
 
-},{"./View":"48jhP","@parcel/transformer-js/src/esmodule-helpers.js":"367CR","url:../../img/icons.svg":"3t5dV"}]},["1WnDs","3miIZ"], "3miIZ", "parcelRequire628f")
+},{"./View":"48jhP","@parcel/transformer-js/src/esmodule-helpers.js":"367CR","url:../../img/icons.svg":"3t5dV"}],"5u5Fw":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+var _iconsSvg = require("url:../../img/icons.svg"); // Parcel 2
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+class PaginationView extends _viewDefault.default {
+    _parentElement = document.querySelector('.pagination');
+    addHandlerClick(handler) {
+        this._parentElement.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn--inline');
+            if (!btn) return;
+            const goTopage = +btn.dataset.goto;
+            handler(goTopage);
+        });
+    }
+    _generateMarkup() {
+        const curPage = this._data.page;
+        const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
+        //page 1, and there are other pages
+        if (curPage === 1 && numPages > 1) return `\n                 <button data-goto= "${curPage + 1}" class="btn--inline pagination__btn--next">\n                    <span>Page ${curPage + 1}</span>\n                    <svg class="search__icon">\n                        <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>\n                    </svg>\n                </button>\n            `;
+        //last page 
+        if (curPage === numPages && numPages > 1) return `\n                <button data-goto= "${curPage - 1}" class="btn--inline pagination__btn--prev">\n                    <svg class="search__icon">\n                        <use href="${_iconsSvgDefault.default}#icon-arrow-left"></use>\n                    </svg>\n                    <span>Page ${curPage - 1}</span>\n                </button> \n            `;
+        //other page
+        if (curPage < numPages) return `\n                <button data-goto= "${curPage - 1}" class="btn--inline pagination__btn--prev">\n                    <svg class="search__icon">\n                        <use href="${_iconsSvgDefault.default}#icon-arrow-left"></use>\n                    </svg>\n                    <span>Page ${curPage - 1}</span>\n                </button> \n\n                <button data-goto= "${curPage + 1}" class="btn--inline pagination__btn--next">\n                    <span>Page ${curPage + 1}</span>\n                    <svg class="search__icon">\n                        <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>\n                    </svg>\n                </button>\n            `;
+        //page 2, and there are no other pages
+        return ' ';
+    }
+}
+exports.default = new PaginationView();
+
+},{"url:../../img/icons.svg":"3t5dV","@parcel/transformer-js/src/esmodule-helpers.js":"367CR","./View":"48jhP"}]},["1WnDs","3miIZ"], "3miIZ", "parcelRequire628f")
 
 //# sourceMappingURL=index.250b04c7.js.map

@@ -9,7 +9,7 @@ class ResultsView extends View{
 
     _generateMarkup(){
         // this loop the preview of search result using map and join properties
-        return this._data.map(this._generateMarkup).join('');
+        return this._data.map(this._generateMarkupPreview).join('');
     }
 
     _generateMarkupPreview(result) {
