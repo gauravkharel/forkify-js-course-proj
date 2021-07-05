@@ -47,6 +47,8 @@ const controlRecipes = async function(){
 
     //2. Rendering the recipe 
     recipeView.render(model.state.recipe);
+
+
     }catch(err){
       recipeView.renderError();
     }
@@ -86,11 +88,22 @@ const controlPagination = function(goTopage) {
   
 };
 
+const controlServings = function (newServings) {
+  //Update the recipe servings (In state)
+  model.updateServings(newServings);
+
+
+  //Update the recipe view
+  recipeView.render(model.state.recipe);
+};
+
 //Publisher_Subscriber Design Patter with addHandlerRender in controller.js
 const init = function() {
   recipeView.addHandlerRender(controlRecipes);
+  recipeView.addHandlerUpdateServings(controlServings);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
+
 }; 
 init();
 
