@@ -24,7 +24,7 @@ body {
   font-weight: 400;
   line-height: 1.6;
   color: #615551;
-  background-image: linear-gradient(to right bottom, #fbdb89, #f48982);
+  background-image: linear-gradient(to right bottom, #264653, #2a9d8f);
   background-size: cover;
   background-repeat: no-repeat;
   min-height: calc(100vh - 2 * 4vw);
@@ -52,7 +52,7 @@ body {
 }
 
 .btn--small, .btn--small:link, .btn--small:visited, .btn {
-  background-image: linear-gradient(to right bottom, #fbdb89, #f48982);
+  background-image: linear-gradient(to right bottom, #264653, #2a9d8f);
   border-radius: 10rem;
   border: none;
   text-transform: uppercase;
@@ -96,7 +96,7 @@ body {
 }
 
 .btn--inline {
-  color: #f38e82;
+  color: #2a9d8f;
   font-size: 1.3rem;
   font-weight: 600;
   border: none;
@@ -118,7 +118,7 @@ body {
   margin: 0 0.4rem;
 }
 .btn--inline:hover {
-  color: #f48982;
+  color: #2a9d8f;
   background-color: #f2efee;
 }
 .btn--inline:focus {
@@ -126,7 +126,7 @@ body {
 }
 
 .btn--round {
-  background-image: linear-gradient(to right bottom, #fbdb89, #f48982);
+  background-image: linear-gradient(to right bottom, #264653, #2a9d8f);
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -159,18 +159,18 @@ body {
 .btn--tiny svg {
   height: 100%;
   width: 100%;
-  fill: #f38e82;
+  fill: #2a9d8f;
   transition: all 0.3s;
 }
 .btn--tiny:focus {
   outline: none;
 }
 .btn--tiny:hover svg {
-  fill: #f48982;
+  fill: #2a9d8f;
   transform: translateY(-1px);
 }
 .btn--tiny:active svg {
-  fill: #f48982;
+  fill: #2a9d8f;
   transform: translateY(0);
 }
 .btn--tiny:not(:last-child) {
@@ -180,7 +180,7 @@ body {
 .heading--2 {
   font-size: 2rem;
   font-weight: 700;
-  color: #f38e82;
+  color: #2a9d8f;
   text-transform: uppercase;
   margin-bottom: 2.5rem;
   text-align: center;
@@ -198,7 +198,7 @@ body {
 .spinner svg {
   height: 6rem;
   width: 6rem;
-  fill: #f38e82;
+  fill: #2a9d8f;
   animation: rotate 2s infinite linear;
 }
 
@@ -221,7 +221,7 @@ body {
 .error svg {
   height: 3rem;
   width: 3rem;
-  fill: #f38e82;
+  fill: #2a9d8f;
   transform: translateY(-0.3rem);
 }
 .message p,
@@ -314,7 +314,7 @@ body {
 .nav__btn svg {
   height: 2.4rem;
   width: 2.4rem;
-  fill: #f38e82;
+  fill: #2a9d8f;
   margin-right: 0.7rem;
   transform: translateY(-1px);
 }
@@ -388,7 +388,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  background-image: linear-gradient(to right bottom, #fbdb89, #f48982);
+  background-image: linear-gradient(to right bottom, #264653, #2a9d8f);
   opacity: 0.4;
 }
 .preview__fig img {
@@ -408,7 +408,7 @@ body {
 .preview__title {
   grid-column: 1/-1;
   font-size: 1.45rem;
-  color: #f38e82;
+  color: #2a9d8f;
   text-transform: uppercase;
   font-weight: 600;
   text-overflow: ellipsis;
@@ -436,7 +436,7 @@ body {
 .preview__user-generated svg {
   height: 1.2rem;
   width: 1.2rem;
-  fill: #f38e82;
+  fill: #2a9d8f;
 }
 
 .search-results {
@@ -493,7 +493,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  background-image: linear-gradient(to right bottom, #fbdb89, #f48982);
+  background-image: linear-gradient(to right bottom, #264653, #2a9d8f);
   opacity: 0.6;
 }
 .recipe__img {
@@ -519,7 +519,7 @@ body {
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   padding: 1.3rem 2rem;
-  background-image: linear-gradient(to right bottom, #fbdb89, #f48982);
+  background-image: linear-gradient(to right bottom, #264653, #2a9d8f);
 }
 @media only screen and (max-width: 61.25em) {
   .recipe__title {
@@ -543,7 +543,7 @@ body {
 .recipe__info-icon {
   height: 2.35rem;
   width: 2.35rem;
-  fill: #f38e82;
+  fill: #2a9d8f;
   margin-right: 1.15rem;
 }
 .recipe__info-data {
@@ -569,7 +569,7 @@ body {
 .recipe__user-generated svg {
   height: 2.25rem;
   width: 2.25rem;
-  fill: #f38e82;
+  fill: #2a9d8f;
 }
 .recipe__ingredients {
   padding: 5rem 8rem;
@@ -592,7 +592,7 @@ body {
 .recipe__icon {
   height: 2rem;
   width: 2rem;
-  fill: #f38e82;
+  fill: #2a9d8f;
   margin-right: 1.1rem;
   flex: 0 0 auto;
   margin-top: 0.1rem;
@@ -688,7 +688,7 @@ body {
 }
 .upload__column input:focus {
   outline: none;
-  border: 1px solid #f38e82;
+  border: 1px solid #2a9d8f;
   background-color: #f9f5f3;
 }
 .upload__column button {

@@ -8,15 +8,15 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { async } from 'regenerator-runtime';
 
-// const recipeContainer = document.querySelector('.recipe');
+const recipeContainer = document.querySelector('.recipe');
 
-// const timeout = function (s) {
-//   return new Promise(function (_, reject) {
-//     setTimeout(function () {
-//       reject(new Error(`Request took too long! Timeout after ${s} second`));
-//     }, s * 1000);
-//   });
-// };
+const timeout = function (s) {
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error(`Request took too long! Timeout after ${s} second`));
+    }, s * 1000);
+  });
+};
 
 // https://forkify-api.herokuapp.com/v2
 
@@ -35,20 +35,19 @@ const controlRecipes = async function(){
   // Listening the loads and hashchange events
   try{
     const id = window.location.hash.slice(1);
-
     
     if(!id) return;
     recipeView.renderSpinner();
 
-   // 1. Loading the recipe
+   // 0. Update results view to mark selected search results
+   resultsView.update(model.getSearchResultPage());
 
+   // 1. Loading the recipe
     await model.loadRecipe(id);
     // const { recipe } = model.state;    
 
     //2. Rendering the recipe 
     recipeView.render(model.state.recipe);
-
-
     }catch(err){
       recipeView.renderError();
     }
@@ -94,7 +93,8 @@ const controlServings = function (newServings) {
 
 
   //Update the recipe view
-  recipeView.render(model.state.recipe);
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
 };
 
 //Publisher_Subscriber Design Patter with addHandlerRender in controller.js

@@ -9,7 +9,7 @@ class RecipeView extends View{
     _errorMessage = 'This input is incorrect. Please try with another one.';
     _message = ''; 
     
-    //Implemented Publisher-Subscriber Design Pattern for Event Hanling 
+    //Implemented Publisher-Subscriber Design Pattern for Event Handling 
     addHandlerRender(handler){
         ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
 
