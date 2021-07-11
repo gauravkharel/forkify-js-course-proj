@@ -12,9 +12,10 @@ export const state = {
         page: 1,
         resultsPerPage: RES_PER_PAGE,
     },
+	bookmarks: [],
 };
 
-const createRecipeObject = function(data) {
+const createRecipeObject = function (data) {
         const { recipe } = data.data;
         
             return {
@@ -27,17 +28,18 @@ const createRecipeObject = function(data) {
             cookingTime: recipe.cooking_time,
             ingredients: recipe.ingredients,
             //add property to the object only if it have some values
-            ...(recipe.key && {key: recipe.key}),
+            ...(recipe.key && { key: recipe.key }),
         };
 };
 
 
 export const loadRecipe = async function (id) {
-    try{
-        const data = await AJAX(`${API_URL}${id}`);
-    
-        const { recipe } = data.data;
-        state.recipe =  createRecipeObject(data);
+    try {
+      const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
+   state.recipe = createRecipeObject(data);
+
+   if (state.bookmarks.some(bookmark => bookmark.id === id))
+
     
     if (state.bookmarks.some(bookmark => bookmark.id ===id))
         state.recipe.bookmarked = true;
@@ -46,7 +48,7 @@ export const loadRecipe = async function (id) {
     }
     catch(err){
         //Temp Error Handling
-        console.log(`${err}  👣  👣  👣 `)
+        console.error(`${err}  👣  👣  👣 `)
         throw err;
         }
 };
@@ -64,7 +66,7 @@ export const loadSearchResults = async function (query) {
                 title: rec.title,
                 publisher: rec.publisher,
                 image: rec.image_url,
-                ...(rec.key && {key: rec.key}),
+               ...(rec.key && { key: rec.key }),
             };
         });
         state.search.page = 1;
@@ -72,12 +74,12 @@ export const loadSearchResults = async function (query) {
 
 
     } catch (err) {
-        console.error(`${err}`);
+        console.error(`${err} boom`);
         throw err;
     }
 };
 
-export const getSearchResultPage = function (page = state.search.page) {
+export const getSearchResultsPage = function (page = state.search.page) {
     state.search.page = page;
 
     const start = (page - 1) * state.search.resultsPerPage;
@@ -86,18 +88,16 @@ export const getSearchResultPage = function (page = state.search.page) {
     return state.search.results.slice(start, end);
 };
 
-export const updateServings = function(newServings) {
-    state.recipie.ingredients.foreach(ing => {
-        ing.quantity = ing.quantity * newServings / state.recipie.servings;
-
-        //newQ = oldQ * newServings / oldServing // 2 * 8 / 4 = 4
-
-
+export const updateServings = function (newServings) {
+    state.recipe.ingredients.forEach(ing => {
+      ing.quantity = (ing.quantity * newServings) / state.recipe.servings;
+      // newQt = oldQt * newServings / oldServings // 2 * 8 / 4 = 4
     });
-
+  
     state.recipe.servings = newServings;
 
 };
+
 
 const persistBookmarks = function(){
     localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
@@ -105,7 +105,7 @@ const persistBookmarks = function(){
 
 export const addBookmark = function (recipe) {
     // Add Bookmark
-    state.bookmark.push(recipe);
+    state.bookmarks.push(recipe);
 
     //Mark current recipe as bookmarked
     if(recipe.id === state.recipe.id) state.recipe.bookmarked = true;
@@ -115,10 +115,10 @@ export const addBookmark = function (recipe) {
 
 export const deleteBookmark = function (id) {
     const index = state.bookmarked.findIndex(el => el.id === id);
-    state.bookmarked.splice(index, 1);
+    state.bookmarks.splice(index, 1);
 
     //Mark current recipe as not bookmarked
-    if(id === state.recipe.id) state.recipe.bookmarked = false;
+    if (id === state.recipe.id) state.recipe.bookmarked = false;
 
     persistBookmarks();
 }
@@ -142,7 +142,7 @@ export const updloadRecipe = async function (newRecipe) {
         const ingredients = Object.entries(newRecipe)
         .filter(entry => entry[0].startsWith('ingredient') && entry[1] !== '')
         .map(ing => {
-            const ingArr = ing[1].replaceAll(' ', '').split(',');
+            const ingArr = ing[1].split(',').map(el => el.trim());
             if (ingArr.length !== 3)
                 throw new Error(
                     'Wrong ingredient format, Feri Prayas garnu hola'
@@ -150,7 +150,7 @@ export const updloadRecipe = async function (newRecipe) {
 
             const [quantity, unit, description] = ingArr;
             
-            return { quantity:quantity ? +quantity : null, unit, description };
+            return { quantity: quantity ? +quantity : null, unit, description };
         });
 
         const recipe = {
@@ -168,7 +168,6 @@ export const updloadRecipe = async function (newRecipe) {
         addBookmark(state.recipe);
 
     } catch (err) {
-        throw(err);
+        throw err;
     }
 };
-

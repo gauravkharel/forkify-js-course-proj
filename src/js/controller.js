@@ -5,47 +5,23 @@ import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import bookmarksView from './views/bookmarksView';
-import addRecipieView from './views/addRecipeView';
-
+import addRecipeView from './views/addRecipeView';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { async } from 'regenerator-runtime';
-import addRecipeView from './views/addRecipeView';
-
-const recipeContainer = document.querySelector('.recipe');
-
-const timeout = function (s) {
-  return new Promise(function (_, reject) {
-    setTimeout(function () {
-      reject(new Error(`Request took too long! Timeout after ${s} second`));
-    }, s * 1000);
-  });
-};
-
-// https://forkify-api.herokuapp.com/v2
-
-////////////////////////////////////////
-
-//module.hot is a parcel usecase, not js 
-// if (module.hot){
-
-
-//   module.hot.accept();
-// }
-
 
 const controlRecipes = async function(){
   
-  // Listening the loads and hashchange events
+  // Listening the  loads and hashchange events
   try{
     const id = window.location.hash.slice(1);
     
-    if(!id) return;
+    if (!id) return;
     recipeView.renderSpinner();
 
    // 0. Update results view to mark selected search results
-   resultsView.update(model.getSearchResultPage());
+   resultsView.update(model.getSearchResultsPage());
    bookmarksView.update(model.state.bookmarks);
 
    // 1. Loading the recipe
@@ -56,6 +32,8 @@ const controlRecipes = async function(){
     recipeView.render(model.state.recipe);
     }catch(err){
       recipeView.renderError();
+      console.error(err);
+
     }
 };
 
@@ -71,7 +49,7 @@ const controlSearchResults = async function(){
     await model.loadSearchResults(query);
 
     //3) Render Results 
-    resultsView.render(model.getSearchResultPage(1));
+    resultsView.render(model.getSearchResultsPage());
 
     //4) Render intial pagination button
     paginationView.render(model.state.search);
@@ -102,9 +80,9 @@ const controlServings = function (newServings) {
   recipeView.update(model.state.recipe);
 };
 
-const controlAddBookmark = function() {
+const controlAddBookmark = function () {
   // 1. add/remove the bookmark
-  if(!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
+  if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
   else model.deleteBookmark(model.state.recipe.id);
 
   // 2. Update recipe view

@@ -10,8 +10,8 @@ class PaginationView extends View{
             const btn = e.target.closest('.btn--inline');
             if (!btn) return;
 
-            const goTopage = +btn.dataset.goto;
-            handler(goTopage);
+            const goToPage = +btn.dataset.goto;
+            handler(goToPage);
         });
     } 
 
@@ -30,7 +30,7 @@ class PaginationView extends View{
                         <use href="${icons}#icon-arrow-right"></use>
                     </svg>
                 </button>
-            `
+            `;
         }
         
         //last page 
@@ -42,7 +42,7 @@ class PaginationView extends View{
                     </svg>
                     <span>Page ${curPage - 1}</span>
                 </button> 
-            `
+            `;
         }
 
         //other page
@@ -61,11 +61,11 @@ class PaginationView extends View{
                         <use href="${icons}#icon-arrow-right"></use>
                     </svg>
                 </button>
-            `
+            `;
         }
 
         //page 2, and there are no other pages
-        return ' '
+        return ' ';
     }
 }
 
